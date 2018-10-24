@@ -7,6 +7,11 @@ module ActiveRecord
     undef :find_or_create_by
     undef :find_or_create_by!
 
+    def new(attributes = nil, options = {}, &block)
+      # No idea what to do with options if Rails no longer uses them?
+      super(attributes, &block)
+    end
+
     # Tries to load the first record; if it fails, then <tt>create</tt> is called with the same arguments as this method.
     #
     # Expects arguments in the same format as +Base.create+.
@@ -50,7 +55,8 @@ module ActiveRecord
     end
 
     def find_or_initialize_by(attributes, options = {}, &block)
-      find_by(attributes.respond_to?(:to_unsafe_h) ? attributes.to_unsafe_h : attributes) || new(attributes, options, &block)
+      find_by(attributes.respond_to?(:to_unsafe_h) ? attributes.to_unsafe_h : attributes) ||
+      new(attributes, options, &block)
     end
 
     def find_or_create_by(attributes, options = {}, &block)
